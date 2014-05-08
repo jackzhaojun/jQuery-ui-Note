@@ -55,6 +55,7 @@ $.widget = function( name, base, prototype ) {
 		}
 	};
 	// extend with the existing constructor to carry over any static properties
+    //扩展在现有的构造函数的任何静态属性
 	$.extend( constructor, existingConstructor, {
 		version: prototype.version,
 		// copy the object used to create the prototype in case we need to
@@ -121,7 +122,6 @@ $.widget = function( name, base, prototype ) {
 	if ( existingConstructor ) {
 		$.each( existingConstructor._childConstructors, function( i, child ) {
 			var childPrototype = child.prototype;
-            console.log(1);
 			// redefine the child widget using the same prototype that was
 			// originally used, but inherit from the new version of the base
             //重新定义子小部件使用相同的原型,最初是使用,但继承新版本的基础
