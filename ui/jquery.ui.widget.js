@@ -136,7 +136,7 @@ $.widget = function( name, base, prototype ) {
 
 	$.widget.bridge( name, constructor );
 };
-
+//做继承用的和$.extend功能一样
 $.widget.extend = function( target ) {
 	var input = slice.call( arguments, 1 ),
 		inputIndex = 0,
@@ -162,7 +162,7 @@ $.widget.extend = function( target ) {
 	}
 	return target;
 };
-
+//自定义UI对外发布
 $.widget.bridge = function( name, object ) {
 	var fullName = object.prototype.widgetFullName || name;
 	$.fn[ name ] = function( options ) {
@@ -208,7 +208,7 @@ $.widget.bridge = function( name, object ) {
 		return returnValue;
 	};
 };
-
+//自定义UI默认base
 $.Widget = function( /* options, element */ ) {};
 $.Widget._childConstructors = [];
 
