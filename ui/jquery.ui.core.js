@@ -201,6 +201,8 @@ $(function() {
 	});
 
 	$.support.minHeight = div.offsetHeight === 100;
+    //是否支持onselectstart事件
+    //http://www.dwz.cn/iAwap
 	$.support.selectstart = "onselectstart" in div;
 
 	// set display to none to avoid a layout bug in IE
