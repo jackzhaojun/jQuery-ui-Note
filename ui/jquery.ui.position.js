@@ -288,7 +288,8 @@ $.ui.position = {
 				overLeft = withinOffset - collisionPosLeft,
 				overRight = collisionPosLeft + data.collisionWidth - outerWidth - withinOffset,
 				newOverRight;
-
+             //overLeft > 0 的时候代表左边溢出
+            //overRight > 0 的时候代表右边溢出
 			// element is wider than within
 			if ( data.collisionWidth > outerWidth ) {
 				// element is initially over the left side of within
@@ -306,10 +307,12 @@ $.ui.position = {
 						position.left = withinOffset;
 					}
 				}
+            //左边溢出 pos.left + 溢出量
 			// too far left -> align with left edge
 			} else if ( overLeft > 0 ) {
 				position.left += overLeft;
 			// too far right -> align with right edge
+            //右边溢出
 			} else if ( overRight > 0 ) {
 				position.left -= overRight;
 			// adjust based on position and margin
