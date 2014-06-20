@@ -18,12 +18,13 @@ var cachedScrollbarWidth,
 	round = Math.round,
 	rhorizontal = /left|center|right/,
 	rvertical = /top|center|bottom/,
-	roffset = /[\+\-]\d+%?/,
-	rposition = /^\w+/,
-	rpercent = /%$/,
+	roffset = /[\+\-]\d+%?/,//偏移量eg: left+10 >> +10
+	rposition = /^\w+/,//偏移方向 left+10 >> left
+	rpercent = /%$/,//偏移量是否百分比
 	_position = $.fn.position;
 
 function getOffsets( offsets, width, height ) {
+    //parseInt('+10%', 10) >> 10
 	return [
 		parseInt( offsets[ 0 ], 10 ) * ( rpercent.test( offsets[ 0 ] ) ? width / 100 : 1 ),
 		parseInt( offsets[ 1 ], 10 ) * ( rpercent.test( offsets[ 1 ] ) ? height / 100 : 1 )
@@ -34,6 +35,7 @@ function parseCss( element, property ) {
 }
 
 $.position = {
+    //計算滾動條overflow-y寬度。
 	scrollbarWidth: function() {
 		if ( cachedScrollbarWidth !== undefined ) {
 			return cachedScrollbarWidth;
@@ -56,6 +58,7 @@ $.position = {
 
 		return (cachedScrollbarWidth = w1 - w2);
 	},
+    //返回當前within元素x,y滾動條的寬度。
 	getScrollInfo: function( within ) {
 		var overflowX = within.isWindow ? "" : within.element.css( "overflow-x" ),
 			overflowY = within.isWindow ? "" : within.element.css( "overflow-y" ),
@@ -68,6 +71,7 @@ $.position = {
 			height: hasOverflowY ? $.position.scrollbarWidth() : 0
 		};
 	},
+    //容器信息
 	getWithinInfo: function( element ) {
 		var withinElement = $( element || window ),
 			isWindow = $.isWindow( withinElement[0] );
@@ -99,11 +103,12 @@ $.fn.position = function( options ) {
 		collision = ( options.collision || "flip" ).split( " " ),
 		offsets = {};
 
-	if ( targetElem.nodeType === 9 ) {
+    //nodeType 9 document
+	if ( targetElem.nodeType === 9 ) {//文檔節點
 		targetWidth = target.width();
 		targetHeight = target.height();
 		targetOffset = { top: 0, left: 0 };
-	} else if ( $.isWindow( targetElem ) ) {
+	} else if ( $.isWindow( targetElem ) ) {//window
 		targetWidth = target.width();
 		targetHeight = target.height();
 		targetOffset = { top: target.scrollTop(), left: target.scrollLeft() };
@@ -140,12 +145,14 @@ $.fn.position = function( options ) {
 		// calculate offsets
 		horizontalOffset = roffset.exec( pos[ 0 ] );
 		verticalOffset = roffset.exec( pos[ 1 ] );
+        //存放偏移量left+10(+10偏移量)
 		offsets[ this ] = [
 			horizontalOffset ? horizontalOffset[ 0 ] : 0,
 			verticalOffset ? verticalOffset[ 0 ] : 0
 		];
 
 		// reduce to just the positions without the offsets
+        //存放偏移方向left
 		options[ this ] = [
 			rposition.exec( pos[ 0 ] )[ 0 ],
 			rposition.exec( pos[ 1 ] )[ 0 ]
@@ -157,6 +164,7 @@ $.fn.position = function( options ) {
 		collision[ 1 ] = collision[ 0 ];
 	}
 
+    //計（of）元素位置 為right時 left值為 left+= (of)width
 	if ( options.at[ 0 ] === "right" ) {
 		basePosition.left += targetWidth;
 	} else if ( options.at[ 0 ] === "center" ) {
@@ -288,14 +296,15 @@ $.ui.position = {
 				overLeft = withinOffset - collisionPosLeft,
 				overRight = collisionPosLeft + data.collisionWidth - outerWidth - withinOffset,
 				newOverRight;
-             //overLeft > 0 的时候代表左边溢出
-            //overRight > 0 的时候代表右边溢出
+
+            //overLeft > 0 的时候 左边溢出
+            //overRight > 0 的时候右边溢出
 			// element is wider than within
 			if ( data.collisionWidth > outerWidth ) {
 				// element is initially over the left side of within
 				if ( overLeft > 0 && overRight <= 0 ) {
 					newOverRight = position.left + overLeft + data.collisionWidth - outerWidth - withinOffset;
-					position.left += overLeft - newOverRight;
+                    position.left += overLeft - newOverRight;
 				// element is initially over right side of within
 				} else if ( overRight > 0 && overLeft <= 0 ) {
 					position.left = withinOffset;
@@ -307,12 +316,10 @@ $.ui.position = {
 						position.left = withinOffset;
 					}
 				}
-            //左边溢出 pos.left + 溢出量
 			// too far left -> align with left edge
 			} else if ( overLeft > 0 ) {
 				position.left += overLeft;
 			// too far right -> align with right edge
-            //右边溢出
 			} else if ( overRight > 0 ) {
 				position.left -= overRight;
 			// adjust based on position and margin
