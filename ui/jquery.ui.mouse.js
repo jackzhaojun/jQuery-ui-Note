@@ -56,9 +56,11 @@ $.widget("ui.mouse", {
 
 	_mouseDown: function(event) {
 		// don't let more than one widget handle mouseStart
+        //不要让多个widget处理mouseStart
 		if( mouseHandled ) { return; }
 
 		// we may have missed mouseup (out of window)
+        //我们可能错过mouseup（离开窗口） 就是鼠标脱离当前窗口的时候要调用mouseup
 		(this._mouseStarted && this._mouseUp(event));
 
 		this._mouseDownEvent = event;
@@ -88,11 +90,13 @@ $.widget("ui.mouse", {
 		}
 
 		// Click event may never have fired (Gecko & Opera)
+        //可能从来没有触发单击事件
 		if (true === $.data(event.target, this.widgetName + '.preventClickEvent')) {
 			$.removeData(event.target, this.widgetName + '.preventClickEvent');
 		}
 
 		// these delegates are required to keep context
+        //这些代理要求保持上下文
 		this._mouseMoveDelegate = function(event) {
 			return that._mouseMove(event);
 		};
