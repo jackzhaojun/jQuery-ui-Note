@@ -69,18 +69,19 @@ $.widget("ui.mouse", {
 			btnIsLeft = (event.which === 1),
 			// event.target.nodeName works around a bug in IE 8 with
 			// disabled inputs (#7620)
+            //来自己IE的一个bug   https://github.com/jquery/jquery-ui/commit/09e88d6220af2f90197c826ac3a31a0ca97f2c8f#commitcomment-513760
 			elIsCancel = (typeof this.options.cancel === "string" && event.target.nodeName ? $(event.target).closest(this.options.cancel).length : false);
 		if (!btnIsLeft || elIsCancel || !this._mouseCapture(event)) {
 			return true;
 		}
-
+        //时间延迟处理（delay时间后才触发拖动）
 		this.mouseDelayMet = !this.options.delay;
 		if (!this.mouseDelayMet) {
 			this._mouseDelayTimer = setTimeout(function() {
 				that.mouseDelayMet = true;
 			}, this.options.delay);
 		}
-
+        //像素延长处理（当鼠标移动distance像素后才开始移动）
 		if (this._mouseDistanceMet(event) && this._mouseDelayMet(event)) {
 			this._mouseStarted = (this._mouseStart(event) !== false);
 			if (!this._mouseStarted) {
@@ -115,6 +116,7 @@ $.widget("ui.mouse", {
 
 	_mouseMove: function(event) {
 		// IE mouseup check - mouseup happened when mouse was out of window
+        //IE mouseup 检测 - 当鼠标离开窗口触发mouseup
 		if ($.ui.ie && !(document.documentMode >= 9) && !event.button) {
 			return this._mouseUp(event);
 		}
