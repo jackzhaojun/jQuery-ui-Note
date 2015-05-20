@@ -25,6 +25,7 @@ $.widget("ui.mouse", {
 		distance: 1,
 		delay: 0
 	},
+    // 如果组件想继承ui.mouse必须在组件的_create方法调用_mouseInit
 	_mouseInit: function() {
 		var that = this;
 
@@ -60,7 +61,8 @@ $.widget("ui.mouse", {
 		if( mouseHandled ) { return; }
 
 		// we may have missed mouseup (out of window)
-        //我们可能错过mouseup（离开窗口） 就是鼠标脱离当前窗口的时候要调用mouseup
+        //我们可能错过mouseup（离开窗口） 就是鼠标移动到当前窗口外鼠标释放的时候，
+        // 窗口内的mouseup监听不到，所以下次调用mouseDown前要先调用mouseup
 		(this._mouseStarted && this._mouseUp(event));
 
 		this._mouseDownEvent = event;
@@ -69,7 +71,7 @@ $.widget("ui.mouse", {
 			btnIsLeft = (event.which === 1),
 			// event.target.nodeName works around a bug in IE 8 with
 			// disabled inputs (#7620)
-            //来自己IE的一个bug   https://github.com/jquery/jquery-ui/commit/09e88d6220af2f90197c826ac3a31a0ca97f2c8f#commitcomment-513760
+            //来自IE的一个bug   https://github.com/jquery/jquery-ui/commit/09e88d6220af2f90197c826ac3a31a0ca97f2c8f#commitcomment-513760
 			elIsCancel = (typeof this.options.cancel === "string" && event.target.nodeName ? $(event.target).closest(this.options.cancel).length : false);
 		if (!btnIsLeft || elIsCancel || !this._mouseCapture(event)) {
 			return true;
